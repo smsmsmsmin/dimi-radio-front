@@ -19,7 +19,6 @@ const AUTH_LOGIN = gql`
   mutation($idx: String!, $password: String!) {
     AuthLogin(idx: $idx, password: $password) {
       accessToken
-      refreshToken
     }
   }
 `;
