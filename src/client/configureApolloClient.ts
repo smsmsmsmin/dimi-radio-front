@@ -4,13 +4,19 @@ import {
   HttpLink,
   InMemoryCache
 } from "apollo-boost";
+import auth from "../utils/auth";
 
 export default function configureClient() {
   const httpLink = new HttpLink({
-    uri: "http://localhost:4000"
+    uri: "https://dimigo.us/graphql"
   });
 
   const authLink = new ApolloLink((operation, forward) => {
+    operation.setContext({
+      headers: {
+        Authorization: auth.getToken()
+      }
+    });
     return forward(operation);
   });
 

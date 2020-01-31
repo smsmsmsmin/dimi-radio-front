@@ -8,7 +8,7 @@ import { Root, NotFound, Auth } from "../pages";
 
 const client = configureClient();
 
-console.log("%c뚫으려고 하다간 네 목이 날아갈거 조심해", 'font-size: 30px; color: red; font-weight: 900;');
+console.log("%c뚫으려고 하다간 네 목이 날아갈걸?", 'font-size: 30px; color: red; font-weight: 900;');
 
 const App: React.FC = () => (
   <BrowserRouter>
