@@ -8,7 +8,7 @@ import auth from "../utils/auth";
 
 export default function configureClient() {
   const httpLink = new HttpLink({
-    uri: "https://dimigo.us/graphql"
+    uri: "http://forwarded-for.danal.me:3000/graphql"
   });
 
   const authLink = new ApolloLink((operation, forward) => {

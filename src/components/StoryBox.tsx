@@ -1,4 +1,7 @@
-import React from "react";
+import React, { useEffect } from "react";
+import TimeAgo from "timeago-react";
+import * as timeago from "timeago.js";
+import ko from "timeago.js/lib/lang/ko";
 import RootBox from "./RootBox";
 import RootBoxTitle from "./RootBoxTitle";
 import css from "@emotion/css";
@@ -10,11 +13,14 @@ interface IProps {
 }
 
 const StoryBox = (props: IProps) => {
+  timeago.register("ko", ko);
   return (
     <RootBox>
       <RootBoxTitle>{props.index}번째 사연</RootBoxTitle>
       <span css={styles.content}>{props.contents} </span>
-      <span css={styles.timestamp}>{props.createAt}</span>
+      <span css={styles.timestamp}>
+        <TimeAgo locale="ko" datetime={props.createAt} />
+      </span>
     </RootBox>
   );
 };
