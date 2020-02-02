@@ -9,21 +9,77 @@ import AuthBoxContainerTitle from "../../components/AuthBoxContainerTitle";
 import RegisterAgree from "../../components/RegisterAgree";
 import RegisterLottie from "../../components/RegisterLottie";
 import AuthInput from "../../components/AuthInput";
-import { phone } from "../../utils";
 import RegisterButton from "../../components/RegisterButton";
-import Swal from "sweetalert2";
+import PhoneVerify from "../../components/PhoneVerify";
+import gql from "graphql-tag";
+import { useMutation } from "@apollo/react-hooks";
+import SweetAlert from "../../utils/swal";
+import { useHistory } from "react-router";
+
+const REGISTER_AUTH = gql`
+  mutation(
+    $identity: String!
+    $username: String!
+    $studentId: String!
+    $phone: String!
+    $password: String!
+    $passwordConfirm: String!
+  ) {
+    AuthSignup(
+      identity: $identity
+      username: $username
+      studentId: $studentId
+      phone: $phone
+      password: $password
+      passwordConfirm: $passwordConfirm
+    ) {
+      _id
+    }
+  }
+`;
+
+export interface IInfo {
+  name: string;
+  studentId: string;
+  id: string;
+  password: string;
+  "re-password": string;
+  phone: string;
+  phoneToken: string;
+}
 
 const Register = () => {
-  const [info, setInfo] = useState({
+  const history = useHistory();
+  const [info, setInfo] = useState<IInfo>({
     name: "",
+    studentId: "",
     id: "",
     password: "",
     "re-password": "",
-    contact: ""
+    phone: "",
+    phoneToken: ""
   });
   const [agree, setAgree] = useState({ legal: false, privacy: false });
-  const [agreeValidation, setAgreeValidation] = useState(false);
-  // const [validation, setValidation] = useState(false);
+  const [agreeValidation, setAgreeValidation] = useState<boolean>(false);
+  const [disable, setDisable] = useState<boolean>(false);
+  const [registerAuth] = useMutation(REGISTER_AUTH, {
+    variables: {
+      identity: info.id,
+      username: info.name,
+      studentId: info.studentId,
+      phone: info.phoneToken,
+      password: info.password,
+      passwordConfirm: info["re-password"]
+    },
+    onCompleted: () => {
+      SweetAlert.success("성공적으로 회원가입이 완료되었습니다.");
+      history.push("/");
+    },
+    onError: error => {
+      setDisable(false);
+      SweetAlert.error(error.message);
+    }
+  });
 
   const handleClick = (
     e: React.MouseEvent<HTMLButtonElement>,
@@ -37,25 +93,35 @@ const Register = () => {
     e.persist();
     setInfo(prevState => ({
       ...prevState,
-      [e.target.name]:
-        e.target.name === "contact" ? phone(e.target.value) : e.target.value
+      [e.target.name]: e.target.value
     }));
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    Swal.fire({
-      title: "등록 완료",
-      text: "성공적으로 등록이 완료되었습니다.",
-      icon: "success",
-      confirmButtonText: "확인",
-      heightAuto: false
-    });
+    // Swal.fire({
+    //   title: "등록 완료",
+    //   text: "성공적으로 등록이 완료되었습니다.",
+    //   icon: "success",
+    //   confirmButtonText: "확인",
+    //   heightAuto: false
+    // });
+  };
+
+  const handleRegister = () => {
+    if (!disable) {
+      registerAuth();
+      setDisable(true);
+    }
   };
 
   useEffect(() => {
     setAgreeValidation(agree.legal && agree.privacy);
   }, [agree]);
+
+  useEffect(() => {
+    console.log(info);
+  }, [info]);
 
   return (
     <AuthContainer>
@@ -86,28 +152,50 @@ const Register = () => {
               <AuthBoxContainerTitle>환영합니다!</AuthBoxContainerTitle>
               <form css={styles.form} onSubmit={handleSubmit}>
                 <div css={styles.inputWrap}>
-                  <AuthInput name="name" placeholder="이름" type="text" />
-                  <AuthInput name="id" placeholder="아이디" type="text" />
+                  <AuthInput
+                    name="name"
+                    placeholder="이름"
+                    type="text"
+                    value={info.name}
+                    onChange={handleChange}
+                  />
+                  <AuthInput
+                    name="studentId"
+                    placeholder="학번"
+                    type="text"
+                    value={info.studentId}
+                    onChange={handleChange}
+                  />
+                  <AuthInput
+                    name="id"
+                    placeholder="아이디"
+                    type="text"
+                    value={info.id}
+                    onChange={handleChange}
+                  />
                   <AuthInput
                     name="password"
                     placeholder="비밀번호"
                     type="password"
+                    value={info.password}
+                    onChange={handleChange}
                   />
                   <AuthInput
                     name="re-password"
                     placeholder="비밀번호 재입력"
                     type="password"
-                  />
-                  <AuthInput
-                    name="contact"
-                    placeholder="전화번호"
-                    type="text"
-                    value={info.contact}
+                    value={info["re-password"]}
                     onChange={handleChange}
-                    maxLength={13}
                   />
+                  <PhoneVerify info={info} setInfo={setInfo} />
                 </div>
-                <RegisterButton type="submit">가입하기</RegisterButton>
+                <RegisterButton
+                  type="submit"
+                  onClick={handleRegister}
+                  disabled={disable}
+                >
+                  가입하기
+                </RegisterButton>
               </form>
             </>
           ) : (
