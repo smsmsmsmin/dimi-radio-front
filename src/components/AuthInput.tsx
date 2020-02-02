@@ -12,9 +12,9 @@ const AuthInput = (
     css={css`
       font-size: 1.3em;
       margin-bottom: 0.5em;
-      &: last-child {
-        margin-bottom: 0;
-      }
+      // &: last-child {
+      //   margin-bottom: 0;
+      // }
     `}
     {...props}
   />

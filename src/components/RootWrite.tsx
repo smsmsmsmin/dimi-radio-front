@@ -6,13 +6,13 @@ import css from "@emotion/css";
 import gql from "graphql-tag";
 import { useMutation } from "@apollo/react-hooks";
 import auth from "../utils/auth";
-import { Link } from "react-router-dom";
+import { Link, useHistory } from "react-router-dom";
 import SweetAlert from "../utils/swal";
 
 const NEW_STORY = gql`
   mutation($contents: String!) {
     StoryWrite(contents: $contents) {
-      idx
+      _id
       contents
       createAt
     }
@@ -20,6 +20,7 @@ const NEW_STORY = gql`
 `;
 
 const RootWrite = ({ refetch }: any) => {
+  const history = useHistory();
   const [contents, setContents] = useState("");
   const [StoryWrite] = useMutation(NEW_STORY, {
     variables: {
@@ -30,7 +31,15 @@ const RootWrite = ({ refetch }: any) => {
       refetch();
       SweetAlert.success("성공적으로 등록이 완료되었습니다.");
     },
-    onError: error => SweetAlert.error(error.message)
+    onError: error => {
+      SweetAlert.error(error.message);
+      if (
+        error.message ===
+        "GraphQL error: 로그아웃되었어요. 다시 로그인해주세요."
+      ) {
+        history.push("/auth/login");
+      }
+    }
   });
 
   return (

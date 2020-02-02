@@ -27,6 +27,8 @@
     "react-scripts": "3.3.0",
     "react-snowf": "https://github.com/jagribble/react-snowf",
     "sweetalert2": "^9.7.1",
+    "timeago-react": "^3.0.0",
+    "timeago.js": "^4.0.2",
     "typescript": "~3.7.2"
   },
   "devDependencies": {

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import css from "@emotion/css";
 import { Link } from "react-router-dom";
 import AuthContainer from "../../components/AuthContainer";
@@ -31,11 +31,10 @@ const Login = () => {
     variables: { ...info },
     onCompleted: data => {
       auth.setToken(data.AuthLogin.accessToken);
-      history.push('/');
+      history.push("/");
     },
     onError: error => SweetAlert.error(error.message)
   });
-
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -47,6 +46,10 @@ const Login = () => {
     setInfo(prevState => ({ ...prevState, [e.target.name]: e.target.value }));
   };
 
+  useEffect(() => {
+    auth.clearAppStorage();
+  }, []);
+
   return (
     <AuthContainer>
       <AuthBox>
@@ -56,7 +59,7 @@ const Login = () => {
         <AuthBoxHr />
         <AuthBoxContainer>
           <AuthBoxContainerTitle>로그인</AuthBoxContainerTitle>
-          <form onSubmit={handleSubmit}>
+          <form css={styles.form} onSubmit={handleSubmit}>
             <div css={styles.middleWrap}>
               <AuthInput
                 name="idx"
@@ -118,6 +121,9 @@ const styles = {
     display: flex;
     align-items: center;
     flex-direction: column;
+  `,
+  form: css`
+    width: 100%;
   `,
   link: css`
     text-decoration: none;

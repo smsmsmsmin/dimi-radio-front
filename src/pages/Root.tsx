@@ -1,7 +1,6 @@
 import React, { useEffect } from "react";
 import AuthContainer from "../components/AuthContainer";
 import css from "@emotion/css";
-import RegisterButton from "../components/RegisterButton";
 // import { Link } from "react-router-dom";
 import RootBox from "../components/RootBox";
 import gql from "graphql-tag";
@@ -11,8 +10,8 @@ import RootWrite from "../components/RootWrite";
 
 const LOAD_STORYS = gql`
   query {
-    StoryView {
-      idx
+    StoryView{
+      _id
       number
       contents
       createAt
@@ -22,9 +21,11 @@ const LOAD_STORYS = gql`
 
 const Root: React.FC = () => {
   const { data, refetch } = useQuery(LOAD_STORYS);
+
   useEffect(() => {
     console.log(data);
   }, [data]);
+
   return (
     <AuthContainer>
       <div css={styles.container}>
@@ -40,7 +41,7 @@ const Root: React.FC = () => {
         <RootWrite refetch={refetch}/>
         {data?.StoryView.map((story: any) => (
           <StoryBox
-            key={story.idx}
+            key={story._id}
             index={story.number}
             contents={story.contents}
             createAt={story.createAt}
@@ -72,7 +73,7 @@ const styles = {
     font-family: "GmarketSansBold";
   `,
   des: css`
-    font-size: 1.5em;
+    font-size: 1.3em;
     font-family: "Cafe24Oneprettynight";
     line-height: 1.5em;
     margin: auto;
