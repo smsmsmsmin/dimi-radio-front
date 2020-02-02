@@ -35,7 +35,8 @@ const RootWrite = ({ refetch }: any) => {
       SweetAlert.error(error.message);
       if (
         error.message ===
-        "GraphQL error: 로그아웃되었어요. 다시 로그인해주세요."
+          "GraphQL error: 로그아웃되었어요. 다시 로그인해주세요." ||
+        error.message === "GraphQL error: 계정에 문제가 발생했어요."
       ) {
         history.push("/auth/login");
       }
