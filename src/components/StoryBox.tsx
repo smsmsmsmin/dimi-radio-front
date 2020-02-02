@@ -15,7 +15,7 @@ interface IProps {
 const StoryBox = (props: IProps) => {
   timeago.register("ko", ko);
   return (
-    <RootBox>
+    <RootBox css={styles.wrapper}>
       <RootBoxTitle>{props.index}번째 사연</RootBoxTitle>
       <span css={styles.content}>{props.contents} </span>
       <span css={styles.timestamp}>
@@ -26,6 +26,9 @@ const StoryBox = (props: IProps) => {
 };
 
 const styles = {
+  wrapper: css`
+    margin-bottom: 1em;
+  `,
   content: css`
     font-size: 1em;
     font-family: "Iropke Batang";
