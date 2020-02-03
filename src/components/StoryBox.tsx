@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React from "react";
 import TimeAgo from "timeago-react";
 import * as timeago from "timeago.js";
 import ko from "timeago.js/lib/lang/ko";
