@@ -119,10 +119,6 @@ const Register = () => {
     setAgreeValidation(agree.legal && agree.privacy);
   }, [agree]);
 
-  useEffect(() => {
-    console.log(info);
-  }, [info]);
-
   return (
     <AuthContainer>
       <AuthBox>

@@ -22,10 +22,6 @@ const LOAD_STORYS = gql`
 const Root: React.FC = () => {
   const { data, refetch } = useQuery(LOAD_STORYS);
 
-  useEffect(() => {
-    console.log(data);
-  }, [data]);
-
   return (
     <AuthContainer>
       <div css={styles.container}>
